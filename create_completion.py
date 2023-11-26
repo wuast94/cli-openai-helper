@@ -63,7 +63,7 @@ full_command = prompt_prefix + prompt_suffix
 # Add additional parameters such as temperature and max_tokens as desired
 response = client.chat.completions.create(
     model=model,
-    prompt=[
+    messages=[
         {
             "role": "system",
             "content": "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation.",
