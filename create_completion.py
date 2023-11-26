@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import openai
+from openai import OpenAI
+
 import sys
 import os
 import configparser
@@ -39,7 +40,7 @@ def initialize_openai_api():
     config = configparser.ConfigParser()
     config.read(API_KEYS_LOCATION)
 
-    openai.api_key = config['openai']['secret_key'].strip('"').strip("'")
+    client = OpenAI(api_key=config['openai']['secret_key'].strip('"').strip("'"))
 
     model = config['openai'].get('model', 'gpt-4-1106-preview').strip('"').strip("'")
 
@@ -56,18 +57,16 @@ prompt_suffix = buffer[cursor_position_char:]
 full_command = prompt_prefix + prompt_suffix
 
 # Add additional parameters such as temperature and max_tokens as desired
-response = openai.Completion.create(
-    model=model,
-    prompt=[
-        {"role": "system", "content": "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation."},
-        {"role": "user", "content": full_command}
-    ],
-    temperature=0.5,  # Change this value to adjust randomness
-    max_tokens=150,   # Change this value to adjust the maximum length of the completion
-    n=1,              # Number of completions to generate
-    stop=None,        # Sequence where the API should stop generating further tokens
-    user="zsh-user"   # This can be set to any string that identifies the user
-)
+response = client.completions.create(model=model,
+prompt=[
+    {"role": "system", "content": "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation."},
+    {"role": "user", "content": full_command}
+],
+temperature=0.5,  # Change this value to adjust randomness
+max_tokens=150,   # Change this value to adjust the maximum length of the completion
+n=1,              # Number of completions to generate
+stop=None,        # Sequence where the API should stop generating further tokens
+user="zsh-user")
 
 completed_command = response.choices[0].text.strip()
 
