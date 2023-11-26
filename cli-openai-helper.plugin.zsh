@@ -16,7 +16,7 @@ create_completion() {
         echo "Natural language command to process: $nl_command" >&2
 
         # Call the Python script with the natural language command.
-        local completion=$(echo -n "$nl_command" | $ZSH_CUSTOM/plugins/zsh_codex/create_completion.py $CURSOR)
+        local completion=$(echo -n "$nl_command" | $ZSH_CUSTOM/plugins/cli-openai-helper/create_completion.py $CURSOR)
 
         # Debug output
         echo "Generated command from Python script: $completion" >&2
