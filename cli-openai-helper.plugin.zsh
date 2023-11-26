@@ -32,17 +32,18 @@ create_completion() {
     fi
 }
 
-# Bind the create_completion function to the accept-line widget,
-# which is invoked when the user presses Enter.
-zle -N create_completion_widget create_completion
-bindkey '^M' create_completion_widget  # '^M' is the control character for Enter (return)
 
-# This function overrides the accept-line widget.
-# It first processes the buffer through create_completion, then accepts the line.
+# Assuming create_completion is a function defined elsewhere in your script
+
 function zsh_accept_line() {
+    # Call your custom completion function
     create_completion
+    # Call the original accept-line widget
     zle .accept-line
 }
 
-# Replace the default accept-line with our custom function.
+# Create a ZLE widget that calls zsh_accept_line
 zle -N accept-line zsh_accept_line
+
+# Bind the Enter key to your custom widget
+bindkey '^M' accept-line
