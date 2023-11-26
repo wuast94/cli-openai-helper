@@ -61,7 +61,7 @@ prompt_suffix = buffer[cursor_position_char:]
 full_command = prompt_prefix + prompt_suffix
 
 # Add additional parameters such as temperature and max_tokens as desired
-response = client.completions.create(
+response = client.chat.completions.create(
     model=model,
     prompt=[
         {
