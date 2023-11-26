@@ -77,6 +77,6 @@ response = client.chat.completions.create(
     user="zsh-user",
 )
 
-completed_command = response['choices'][0]['message']['content']
+completed_command = response.choices[0].message.content.strip()
 
 sys.stdout.write(f"\n{completed_command.replace(prompt_prefix, '', 1)}")
