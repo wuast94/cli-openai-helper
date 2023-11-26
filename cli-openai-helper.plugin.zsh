@@ -1,49 +1,23 @@
 #!/bin/zsh
 
-# This ZSH plugin processes a natural language command starting with a hashtag
-# and uses a Python script to generate the actual shell command to be executed.
+# This ZSH plugin reads the text from the current buffer
+# and uses a Python script to complete the text.
 
 create_completion() {
-    # Check if the buffer starts with a hashtag.
-    if [[ $BUFFER =~ '^# ' ]]; then
-        # Debug output
-        echo "Buffer before processing: $BUFFER" >&2
-
-        # Remove the hashtag from the command.
-        local nl_command=${BUFFER:2}
-
-        # Debug output
-        echo "Natural language command to process: $nl_command" >&2
-
-        # Call the Python script with the natural language command.
-        local completion=$(echo -n "$nl_command" | $ZSH_CUSTOM/plugins/cli-openai-helper/create_completion.py $CURSOR)
-
-        # Debug output
-        echo "Generated command from Python script: $completion" >&2
-
-        # Replace the buffer with the generated command.
-        BUFFER=$completion
-
-        # Debug output
-        echo "Buffer after processing: $BUFFER" >&2
-
-        # Set the cursor position at the end of the buffer.
-        CURSOR=$#BUFFER
-    fi
+    # Get the text typed until now.
+    text=${BUFFER}
+    completion=$(echo -n "$text" | $ZSH_CUSTOM/plugins/cli-openai-helper/create_completion.py $CURSOR)
+    text_before_cursor=${text:0:$CURSOR}
+    text_after_cursor=${text:$CURSOR}
+    # Add completion to the current buffer.
+    BUFFER=${completion}
+    prefix_and_completion="${text_before_cursor}${completion}"
+    # Put the cursor at the end of the completion
+    CURSOR=${#completion}
 }
 
+# Create a new zle widget
+zle -N create_completion_widget create_completion
 
-# Assuming create_completion is a function defined elsewhere in your script
-
-function zsh_accept_line() {
-    # Call your custom completion function
-    create_completion
-    # Call the original accept-line widget
-    zle .accept-line
-}
-
-# Create a ZLE widget that calls zsh_accept_line
-zle -N accept-line zsh_accept_line
-
-# Bind the Enter key to your custom widget
-bindkey '^M' accept-line
+# Bind the create_completion_widget function to Ctrl+F.
+bindkey '^F' create_completion_widget

@@ -66,7 +66,7 @@ response = client.chat.completions.create(
     messages=[
         {
             "role": "system",
-            "content": "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation.",
+            "content": "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation or markdown formatting.",
         },
         {"role": "user", "content": full_command},
     ],
