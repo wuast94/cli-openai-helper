@@ -66,7 +66,7 @@ response = client.chat.completions.create(
     messages=[
         {
             "role": "system",
-            "content": "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation or markdown formatting.",
+            "content": "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, DON`T include any other explanation or markdown formatting. You MUST provide just the command, nothing else.",
         },
         {"role": "user", "content": full_command},
     ],
@@ -80,3 +80,10 @@ response = client.chat.completions.create(
 completed_command = response.choices[0].message.content.strip()
 
 sys.stdout.write(f"\n{completed_command.replace(prompt_prefix, '', 1)}")
+
+
+
+# remove 
+# ```sh
+# find . -type f -name "*.xxx" -exec sh -c 'for file; do mv -- "$file" "${file%.*}.harm"; done' sh {} +
+# ```
