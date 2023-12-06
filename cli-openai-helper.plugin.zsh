@@ -8,7 +8,7 @@ create_completion() {
     # Debug output
         echo "Natural language command to process: $BUFFER" >&2
     text=${BUFFER}
-    completion=$(echo -n "$text" | $ZSH_CUSTOM/plugins/cli-openai-helper/create_completion.py $CURSOR)
+    completion=$(echo -n "$text" | $ZSH_CUSTOM/plugins/wuast94---cli-openai-helper/create_completion.py $CURSOR)
     text_before_cursor=${text:0:$CURSOR}
     text_after_cursor=${text:$CURSOR}
     # Add completion to the current buffer.
